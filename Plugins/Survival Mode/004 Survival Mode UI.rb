@@ -157,23 +157,23 @@ class SurvivalModeCard_Scene
     textPositions = [
        [_INTL("Name"), 34, 70, 0, baseColor, shadowColor],
        [$player.name, 302, 70, 1, baseColor, shadowColor],
-       [_INTL("Health"),40,103,0,baseColor,shadowColor],
-       [_INTL(trainerhealth),302,103,1,healthColor,shadowColor],
-       [_INTL("{1}%",$player.playerhealth.to_s_formatted),190,103,1,healthColor,shadowColor],
-       [_INTL("Pokédex"),36,147,0,baseColor,shadowColor],
-       [sprintf("%d/%d",$player.pokedex.owned_count,$player.pokedex.seen_count),302,147,1,baseColor,shadowColor],
-       [_INTL("FOD"),34,186,0,baseColor,shadowColor],
-       [_INTL(trainerhunger),302,186,1,hungerColor,shadowColor],
-       [_INTL("{1}%",$player.playerfood.to_s_formatted),190,186,1,hungerColor,shadowColor],
-       [_INTL("H20"),34,217,0,baseColor,shadowColor],
-       [_INTL(trainerthirst),302,217,1,thirstColor,shadowColor],
-       [_INTL("{1}%",$player.playerwater.to_s_formatted),190,217,1,thirstColor,shadowColor],
-       [_INTL("SLP"),34,246,0,baseColor,shadowColor],
-       [_INTL(trainersleep),302,246,1,sleepColor,shadowColor],
-       [_INTL("{1}%",$player.playersleep.to_s_formatted),190,246,1,sleepColor,shadowColor]
+       [_INTL("ID No."), 332, 70, 0, baseColor, shadowColor],
+       [sprintf("%05d", $player.public_ID), 468, 70, 1, baseColor, shadowColor],
+       [_INTL("Health"),40,118,0,baseColor,shadowColor],
+       [_INTL(trainerhealth),302,118,1,healthColor,shadowColor],
+       [_INTL("{1}%",$player.playerhealth.to_s_formatted),190,118,1,healthColor,shadowColor],
+       [_INTL("FOD"),34,166,0,baseColor,shadowColor],
+       [_INTL(trainerhunger),302,166,1,hungerColor,shadowColor],
+       [_INTL("{1}%",$player.playerfood.to_s_formatted),190,166,1,hungerColor,shadowColor],
+       [_INTL("H20"),34,214,0,baseColor,shadowColor],
+       [_INTL(trainerthirst),302,214,1,thirstColor,shadowColor],
+       [_INTL("{1}%",$player.playerwater.to_s_formatted),190,214,1,thirstColor,shadowColor],
+       [_INTL("SLP"),34,262,0,baseColor,shadowColor],
+       [_INTL(trainersleep),302,262,1,sleepColor,shadowColor],
+       [_INTL("{1}%",$player.playersleep.to_s_formatted),190,262,1,sleepColor,shadowColor]
     ]
     pbDrawTextPositions(overlay, textPositions)
-=begin
+
     x = 72
     region = pbGetCurrentRegion(0) # Get the current region
     imagePositions = []
@@ -184,7 +184,7 @@ class SurvivalModeCard_Scene
       x += 48
     end
     pbDrawImagePositions(overlay, imagePositions)
-=end
+
   end
 
 
