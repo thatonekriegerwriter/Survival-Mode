@@ -12,6 +12,19 @@
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\#
 #==============================================================================#
 #Thanks Maurili and Vendily for the Original Hunger Script  
+
+module GameData
+  class Item
+	def is_foodwater?
+	  return has_flag?("FoodWater")
+	end
+    def is_medicine?
+	  return has_flag?("Medicine")
+	end
+  end
+end
+
+
 class Player < Trainer
   attr_reader :playerwater  #206
   attr_reader :playerfood   #205
@@ -114,8 +127,14 @@ if SurvivalModeConfig::SLEEPING_PROGRESSES_DAYCARE == true
 
 
  
- def pbEating(bag,item)
- 
+ def pbEating
+item=0
+pbFadeOutIn(99999){
+scene = PokemonBag_Scene.new
+screen = PokemonBagScreen.new(scene,$PokemonBag)
+item = screen.pbChooseItemScreen(proc { |item| (GameData::Item.get(item).is_foodwater? || GameData::Item.get(item).is_berry?) })
+}
+if item
 pbMessage(_INTL("You ate/drank {1}.",item))
 $PokemonBag.pbDeleteItem(item)
 if item == :ORANBERRY
@@ -209,49 +228,6 @@ return 1
 elsif item == :FRESHWATER
 $player.playerwater+=20
 $player.playersaturation+=10#207 is Saturation
-$PokemonBag.pbStoreItem(:GLASSBOTTLE,1)
-Kernel.pbMessage(_INTL("You put the bottle in your Bag."))
-return 1
-#You can add more if you want
-elsif item == :ATKCURRY
-$player.playerfood+=8
-$player.playersaturation+=15
-$player.playerwater-=7
-return 1
-elsif item == :SATKCURRY
-$player.playerfood+=8
-$player.playersaturation+=15
-$player.playerwater-=7
-return 1
-elsif item == :SPEEDCURRY
-$player.playerfood+=8
-$player.playersaturation+=15
-$player.playerwater-=7
-return 1
-elsif item == :SPDEFCURRY
-$player.playerfood+=8
-$player.playersaturation+=15
-$player.playerwater-=7
-return 1
-elsif item == :ACCCURRY
-$player.playerfood+=8
-$player.playersaturation+=12
-$player.playerwater-=7
-return 1
-elsif item == :DEFCURRY
-$player.playerfood+=8
-$player.playersaturation+=15
-$player.playerwater-=7
-return 1
-elsif item == :CRITCURRY
-$player.playerfood+=8
-$player.playersaturation+=15
-$player.playerwater-=7
-return 1
-elsif item == :GSCURRY
-$player.playerfood+=8#205 is Hunger
-$player.playersaturation+=5#207 is Saturation
-$player.playerwater-=7#206 is Thirst
 return 1
 elsif item == :RAGECANDYBAR #chocolate
 $player.playerfood+=10
@@ -268,16 +244,10 @@ $player.playerwater-=11#206 is Thirst
 $player.playersaturation+=11#207 is Saturation
 $player.playersleep+=10#208 is Sleep
 return 1
-$PokemonBag.pbStoreItem(:GLASSBOTTLE,1)
-Kernel.pbMessage(_INTL("You put the bottle in your Bag."))
-return 1
 elsif item == :LEMONADE
 $player.playersaturation+=11#207 is Saturation
 $player.playerwater+=10#206 is Thirst
 $player.playersleep+=7#208 is Sleep
-return 1
-$PokemonBag.pbStoreItem(:GLASSBOTTLE,1)
-Kernel.pbMessage(_INTL("You put the bottle in your Bag."))
 return 1
 elsif item == :HONEY
 $player.playersaturation+=20#207 is Saturation
@@ -289,29 +259,6 @@ $player.playersaturation+=10
 $player.playerwater+=15
 $PokemonBag.pbStoreItem(:GLASSBOTTLE,1)
 Kernel.pbMessage(_INTL("You put the bottle in your Bag."))
-return 1
-elsif item == :CSLOWPOKETAIL
-$player.playersaturation+=10#207 is Saturation
-$player.playerfood+=10#205 is Hunger
-return 1
-elsif item == :BAKEDPOTATO
-$player.playersaturation+=10#207 is Saturation
-$player.playerwater+=4#206 is Thirst
-$player.playerfood+=7#205 is Hunger
-return 1
-elsif item == :APPLE
-$player.playersaturation+=10#207 is Saturation
-$player.playerwater+=3#206 is Thirst
-$player.playerfood+=3#205 is Hunger
-return 1
-elsif item == :CHOCOLATE
-$player.playersaturation+=5#207 is Saturation
-$player.playerfood+=7#205 is Hunger
-return 1
-elsif item == :LEMON
-$player.playersaturation+=3#207 is Saturation
-$player.playerwater+=3#206 is Thirst
-$player.playerfood+=4#205 is Hunger
 return 1
 elsif item == :OLDGATEAU
 $player.playersaturation+=6#207 is Saturation
@@ -339,118 +286,24 @@ elsif item == :BIGMALASADA
 $player.playersaturation+=8#207 is Saturation
 $player.playerfood+=8#205 is Hunger
 return 1
-elsif item == :ONION
-$player.playersaturation+=5#207 is Saturation
-$player.playerwater+=3#206 is Thirst
-$player.playerfood+=3#205 is Hunger
-return 1
-elsif item == :COOKEDORAN
-$player.playersaturation+=6#207 is Saturation
-$player.playerwater+=6#206 is Thirst
-$player.playerfood+=6#205 is Hunger
-return 1
-elsif item == :CARROT
-$player.playersaturation+=6#207 is Saturation
-$player.playerwater+=3#206 is Thirst
-$player.playerfood+=3#205 is Hunger
-return 1
-elsif item == :BREAD
-$player.playersaturation+=10#207 is Saturation
-$player.playerwater+=7#206 is Thirst
-$player.playerfood+=11#205 is Hunger
-return 1
-elsif item == :TEA
-$player.playersaturation+=15#207 is Saturation
-$player.playerwater+=8#206 is Thirst
-$player.playerfood+=2#205 is Hunger
-return 1
-elsif item == :CARROTCAKE
-$player.playersaturation+=15#207 is Saturation
-$player.playerwater+=15#206 is Thirst
-$player.playerfood+=10#205 is Hunger
-return 1
-elsif item == :COOKEDMEAT
-$player.playersaturation+=40#207 is Saturation
-$player.playerwater+=0#206 is Thirst
-$player.playerfood+=20#205 is Hunger
-return 1
-elsif item == :SITRUSJUICE
-$player.playersaturation+=20#207 is Saturation
-$player.playerwater+=25#206 is Thirst
-$player.playerfood+=0#205 is Hunger
-$PokemonBag.pbStoreItem(:GLASSBOTTLE,1)
-Kernel.pbMessage(_INTL("You put the bottle in your Bag."))
-return 1
-elsif item == :BERRYMASH
-$player.playersaturation+=5#207 is Saturation
-$player.playerwater+=5#206 is Thirst
-$player.playerfood+=5#205 is Hunger
-return 1
-elsif item == :LARGEMEAL
-$player.playersaturation+=50#207 is Saturation
-$player.playerwater+=50#206 is Thirst
-$player.playerfood+=50#205 is Hunger
-$player.playerstaminamod+=15#205 is Hunger
- if @pokemon_count==6
-  @party[0].ev[:DEFENSE] += 1
-  @party[1].ev[:DEFENSE] += 1
-  @party[2].ev[:DEFENSE] += 1
-  @party[3].ev[:DEFENSE] += 1
-  @party[4].ev[:DEFENSE] += 1
-  @party[5].ev[:DEFENSE] += 1
-  @party[0].ev[:HP] += 1
-  @party[1].ev[:HP] += 1
-  @party[2].ev[:HP] += 1
-  @party[3].ev[:HP] += 1
-  @party[4].ev[:HP] += 1
-  @party[5].ev[:HP] += 1
- elsif @pokemon_count==5
-  @party[0].ev[:DEFENSE] += 1
-  @party[1].ev[:DEFENSE] += 1
-  @party[2].ev[:DEFENSE] += 1
-  @party[3].ev[:DEFENSE] += 1
-  @party[4].ev[:DEFENSE] += 1
-  @party[0].ev[:HP] += 1
-  @party[1].ev[:HP] += 1
-  @party[2].ev[:HP] += 1
-  @party[3].ev[:HP] += 1
-  @party[4].ev[:HP] += 1
- elsif @pokemon_count==4
-  @party[0].ev[:DEFENSE] += 1
-  @party[1].ev[:DEFENSE] += 1
-  @party[2].ev[:DEFENSE] += 1
-  @party[3].ev[:DEFENSE] += 1
-  @party[0].ev[:HP] += 1
-  @party[1].ev[:HP] += 1
-  @party[2].ev[:HP] += 1
-  @party[3].ev[:HP] += 1
- elsif @pokemon_count==3
-  @party[0].ev[:DEFENSE] += 1
-  @party[1].ev[:DEFENSE] += 1
-  @party[2].ev[:DEFENSE] += 1
-  @party[0].ev[:HP] += 1
-  @party[1].ev[:HP] += 1
-  @party[2].ev[:HP] += 1
- elsif @pokemon_count==2
-  @party[0].ev[:DEFENSE] += 1
-  @party[1].ev[:DEFENSE] += 1
-  @party[0].ev[:HP] += 1
-  @party[1].ev[:HP] += 1
- elsif @pokemon_count==1
-  @party[0].ev[:DEFENSE] += 1
-  @party[0].ev[:HP] += 1
- end
-return 1
 else
 $PokemonBag.pbStoreItem(item,1)
 return 0
 end
 end
+end
 
 
 
- def pbMedicine(bag,item)
+ def pbMedicine
  return if $player.playerhealth == 100
+ item=0
+pbFadeOutIn(99999){
+scene = PokemonBag_Scene.new
+screen = PokemonBagScreen.new(scene,$PokemonBag)
+item = screen.pbChooseItemScreen(proc { |item| (GameData::Item.get(item).is_medicine? })
+}
+if item
 pbMessage(_INTL("You used {1} to heal yourself.",item))
 $PokemonBag.pbDeleteItem(item)
 #205 is Hunger, 207 is Saturation, 206 is Thirst, 208 is Sleep
@@ -472,7 +325,7 @@ return 0
 #full belly
 end
 end
-
+end
 
 ##############################################################
 ###########      Ambient Temperature             #############

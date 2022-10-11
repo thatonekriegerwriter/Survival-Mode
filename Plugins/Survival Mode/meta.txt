@@ -1,2 +1,5 @@
 Name         = Survival Mode
 Requires     = Game Over
+Version      = 1.0.0
+Essentials = 20.1
+Credits   = thatonekriegerwriter, Maurili, Vendily
