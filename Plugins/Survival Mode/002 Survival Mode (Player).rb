@@ -13,119 +13,6 @@
 #==============================================================================#
 #Thanks Maurili and Vendily for the Original Hunger Script  
 
-module GameData
-  class Item
-	def is_foodwater?
-	  return has_flag?("FoodWater")
-	end
-    def is_medicine?
-	  return has_flag?("Medicine")
-	end
-  end
-end
-
-
-class Player < Trainer
-  attr_reader :playerwater  #206
-  attr_reader :playerfood   #205
-  attr_reader :playersleep   #208
-  attr_reader :playersaturation #207
-  attr_reader :playerhealth #225
-  attr_reader :playerstamina
-  attr_reader :playermaxstamina
-  attr_reader :playerstaminamod
-
- alias :_old_fws_initialize :initialize
-  def initialize(name, trainer_type)
-    @playerwater   = 100 
-    @playerfood = 100 
-    @playersaturation = 200
-    @playersleep = 100 
-    @playerhealth  = 100   
-    @playerstamina  = 50  
-    @playermaxstamina = 50
-    @playerstaminamod = 0
-	_old_fws_initialize(name, trainer_type)
-  end
-
-  def playerwater=(value)
-    validate value => Integer
-    @playerwater = value.clamp(0, 100)
-  end
-  def playerfood=(value)
-    validate value => Integer
-    @playerfood = value.clamp(0, 100)
-  end
-  def playersaturation=(value)
-    validate value => Integer
-    @playersaturation = value.clamp(0, 100)
-  end
-  def playersleep=(value)
-    validate value => Integer
-    @playersleep = value.clamp(0, 200)
-  end
-  def playerhealth=(value)
-    validate value => Integer
-    @playerhealth = value.clamp(0, 100)
-  end
-  def playerstamina=(value)
-    validate value => Integer
-    @playerstamina = value.clamp(0, 1000)
-  end
-  def playermaxstamina=(value)
-    validate value => Integer
-    @playermaxstamina = value.clamp(0, 9999)
-  end
-  def playerstaminamod=(value)
-    validate value => Integer
-    @playerstaminamod = value.clamp(0, 50)
-  end
-end
-
-def pbSleepRestore(wari)
-##########PLAYER###################
-#       Stamina   #
-  $player.playerstamina = $player.playermaxstamina
-#       Sleep     #
-  $player.playersleep = $player.playersleep.to_i+(wari*9)
-  if $player.playersleep > 200
-  $player.playersleep = 200  
-  end
-#       FoodWater     #
- if $player.playersaturation==0
-   $player.playerfood=$player.playerfood-(wari*2)
-   $player.playerwater=$player.playerwater-(wari*2)
-  else
-   $player.playersaturation=$player.playersaturation-(wari*2)
- end
-
-##########POKEMON###################
-if defined?(pbEatingPkmn)
-				party = $player.party
-                 for i in 0...party.length
-				pkmn = party[i]
-				if pkmn.sleep.nil?
-				 pkmn.sleep = 100
-				end
-				 pkmn.sleep=pkmn.sleep+(wari*9)
-				 if pkmn.sleep > 100
-				 pkmn.sleep= 100  
-				 end
-				 pkmn.food=pkmn.food-(wari*2)
-				 pkmn.water=pkmn.water-(wari*2)
-				 end
-end
-if SurvivalModeConfig::SLEEPING_PROGRESSES_DAYCARE == true
-#       Daycare     #
-  deposited = DayCare.count
-  if deposited==2 && $PokemonGlobal.daycareEgg==0
-    $PokemonGlobal.daycareEggSteps = 0 if !$PokemonGlobal.daycareEggSteps
-    $PokemonGlobal.daycareEggSteps += (1*wari*10)
-  end
-  end
- end
-
-
  
  def pbEating
 item=0
@@ -301,7 +188,7 @@ end
 pbFadeOutIn(99999){
 scene = PokemonBag_Scene.new
 screen = PokemonBagScreen.new(scene,$PokemonBag)
-item = screen.pbChooseItemScreen(proc { |item| (GameData::Item.get(item).is_medicine? })
+item = screen.pbChooseItemScreen(proc { |item| (GameData::Item.get(item).is_medicine?) })
 }
 if item
 pbMessage(_INTL("You used {1} to heal yourself.",item))
@@ -326,6 +213,119 @@ return 0
 end
 end
 end
+
+module GameData
+  class Item
+	def is_foodwater?
+	  return has_flag?("FoodWater")
+	end
+    def is_medicine?
+	  return has_flag?("Medicine")
+	end
+  end
+end
+
+
+class Player < Trainer
+  attr_reader :playerwater  #206
+  attr_reader :playerfood   #205
+  attr_reader :playersleep   #208
+  attr_reader :playersaturation #207
+  attr_reader :playerhealth #225
+  attr_reader :playerstamina
+  attr_reader :playermaxstamina
+  attr_reader :playerstaminamod
+
+ alias :_old_fws_initialize :initialize
+  def initialize(name, trainer_type)
+    @playerwater   = 100 
+    @playerfood = 100 
+    @playersaturation = 200
+    @playersleep = 100 
+    @playerhealth  = 100   
+    @playerstamina  = 50  
+    @playermaxstamina = 50
+    @playerstaminamod = 0
+	_old_fws_initialize(name, trainer_type)
+  end
+
+  def playerwater=(value)
+    validate value => Integer
+    @playerwater = value.clamp(0, 100)
+  end
+  def playerfood=(value)
+    validate value => Integer
+    @playerfood = value.clamp(0, 100)
+  end
+  def playersaturation=(value)
+    validate value => Integer
+    @playersaturation = value.clamp(0, 100)
+  end
+  def playersleep=(value)
+    validate value => Integer
+    @playersleep = value.clamp(0, 200)
+  end
+  def playerhealth=(value)
+    validate value => Integer
+    @playerhealth = value.clamp(0, 100)
+  end
+  def playerstamina=(value)
+    validate value => Integer
+    @playerstamina = value.clamp(0, 1000)
+  end
+  def playermaxstamina=(value)
+    validate value => Integer
+    @playermaxstamina = value.clamp(0, 9999)
+  end
+  def playerstaminamod=(value)
+    validate value => Integer
+    @playerstaminamod = value.clamp(0, 50)
+  end
+end
+
+def pbSleepRestore(wari)
+##########PLAYER###################
+#       Stamina   #
+  $player.playerstamina = $player.playermaxstamina
+#       Sleep     #
+  $player.playersleep = $player.playersleep.to_i+(wari*9)
+  if $player.playersleep > 200
+  $player.playersleep = 200  
+  end
+#       FoodWater     #
+ if $player.playersaturation==0
+   $player.playerfood=$player.playerfood-(wari*2)
+   $player.playerwater=$player.playerwater-(wari*2)
+  else
+   $player.playersaturation=$player.playersaturation-(wari*2)
+ end
+
+##########POKEMON###################
+if defined?(pbEatingPkmn)
+				party = $player.party
+                 for i in 0...party.length
+				pkmn = party[i]
+				if pkmn.sleep.nil?
+				 pkmn.sleep = 100
+				end
+				 pkmn.sleep=pkmn.sleep+(wari*9)
+				 if pkmn.sleep > 100
+				 pkmn.sleep= 100  
+				 end
+				 pkmn.food=pkmn.food-(wari*2)
+				 pkmn.water=pkmn.water-(wari*2)
+				 end
+end
+if SurvivalModeConfig::SLEEPING_PROGRESSES_DAYCARE == true
+#       Daycare     #
+  deposited = DayCare.count
+  if deposited==2 && $PokemonGlobal.daycareEgg==0
+    $PokemonGlobal.daycareEggSteps = 0 if !$PokemonGlobal.daycareEggSteps
+    $PokemonGlobal.daycareEggSteps += (1*wari*10)
+  end
+  end
+ end
+
 
 ##############################################################
 ###########      Ambient Temperature             #############
@@ -431,3 +431,4 @@ MenuHandlers.add(:options_menu, :survivalmode, {
   "get_proc"    => proc { next $PokemonSystem.survivalmode },
   "set_proc"    => proc { |value, _scene| $PokemonSystem.survivalmode = value }
 })
+
